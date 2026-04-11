@@ -5,6 +5,7 @@ import geolocation.poi.entity.PointOfInterestEntity;
 import geolocation.poi.repository.PointOfInterestRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,5 +23,14 @@ public class PointOfInterestController {
     PointOfInterestEntity newPoi = new PointOfInterestEntity(dto);
     repository.save(newPoi);
     return ResponseEntity.ok(newPoi);
+  }
+
+  @GetMapping("/")
+  public ResponseEntity<Page<PointOfInterestEntity>> listAllPoi(
+    @RequestParam(name = "page", defaultValue = "0") Integer page,
+    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
+  ) {
+    var paginatedPOI = repository.findAll(PageRequest.of(page, pageSize));
+    return ResponseEntity.ok(paginatedPOI);
   }
 }
