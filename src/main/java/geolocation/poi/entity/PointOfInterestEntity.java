@@ -18,6 +18,12 @@ public class PointOfInterestEntity {
     this.longitude = dto.longitude();
   }
 
+  public PointOfInterestEntity(String name, Long latitude, Long longitude) {
+    this.name = name;
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   public Long id;
