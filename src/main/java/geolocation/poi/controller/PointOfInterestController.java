@@ -4,6 +4,7 @@ import geolocation.poi.dto.request.CreatePoiDTO;
 import geolocation.poi.entity.PointOfInterestEntity;
 import geolocation.poi.repository.PointOfInterestRepository;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
@@ -32,5 +33,20 @@ public class PointOfInterestController {
   ) {
     var paginatedPOI = repository.findAll(PageRequest.of(page, pageSize));
     return ResponseEntity.ok(paginatedPOI);
+  }
+
+  @GetMapping("/near-me")
+  public ResponseEntity<List<PointOfInterestEntity>> nearMe(
+    @RequestParam("longitude") Long longitude,
+    @RequestParam("latitude") Long latitude,
+    @RequestParam("distance") Long distance
+  ) {
+    var longMax = longitude + distance;
+    var longMin = longitude - distance;
+    var latMax = latitude + distance;
+    var latMin = latitude - distance;
+
+    var nearMe = repository.findNearMe(longMax, longMin, latMax, latMin);
+    return ResponseEntity.ok(nearMe);
   }
 }
